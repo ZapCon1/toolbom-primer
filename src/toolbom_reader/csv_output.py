@@ -44,7 +44,7 @@ def rows_csv(rows: Sequence[BomRow]) -> str:
     writer = csv.writer(buffer, lineterminator="\r\n")
     writer.writerow(BOM_COLUMNS)
     for row in rows:
-        writer.writerow([_cell(getattr(row, name)) for name in BOM_COLUMNS])
+        writer.writerow([csv_cell(getattr(row, name)) for name in BOM_COLUMNS])
     return buffer.getvalue()
 
 
@@ -68,11 +68,12 @@ def purchase_lists_csv(lists: PurchaseLists) -> str:
         writer.writerow([title])
         writer.writerow(names)
         for line in lines:
-            writer.writerow([_cell(getattr(line, name)) for name in names])
+            writer.writerow([csv_cell(getattr(line, name)) for name in names])
     return buffer.getvalue()
 
 
-def _cell(value: object) -> str:
+def csv_cell(value: object) -> str:
+    """One value as CSV cell text: blank for null, lists joined, formulas defused."""
     if value is None:
         return ""
     if isinstance(value, list):

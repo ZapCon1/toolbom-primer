@@ -16,4 +16,7 @@ You're helping someone build tool-library-to-BOM conversion into their own syste
 
 ## Testing
 
+Run your implementation against `conformance/cases.json` (see `conformance/README.md`): every rule above as input and expected output. Read `docs/GLOSSARY.md` if the domain terms are new.
+
+
 `examples/` has two small synthetic libraries and the exact output the reader produces from each. Use them to check your own implementation. Build synthetic libraries in tests (see `tests/tooldb_factory.py` and `tests/fusion_factory.py`). Never commit a real customer library: it can hold proprietary tooling data. Cover 0, 1, 2 and many tools, and one malicious file per defense.

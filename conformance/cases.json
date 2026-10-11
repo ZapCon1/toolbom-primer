@@ -1,0 +1,136 @@
+{
+  "about": "Input and expected output for every rule in docs/. Rows list only the fields a case needs: a missing text field is \"\" and a missing number is null. See conformance/README.md.",
+  "version": 1,
+  "format_detection": [
+    { "name": "Mastercam .tooldb is SQLite", "first_bytes_hex": "53514c69746520666f726d6174203300", "expected": "mastercam" },
+    { "name": "Fusion .tools is a zip", "first_bytes_hex": "504b0304140000000800", "expected": "fusion" },
+    { "name": "Fusion JSON export", "first_bytes_hex": "7b2264617461223a5b", "expected": "fusion" },
+    { "name": "Fusion JSON with a UTF-8 byte-order mark", "first_bytes_hex": "efbbbf7b2264617461", "expected": "fusion" },
+    { "name": "Fusion JSON with leading whitespace", "first_bytes_hex": "0d0a207b", "expected": "fusion" },
+    { "name": "an empty zip (end-of-directory record only) is not a library", "first_bytes_hex": "504b0506000000000000", "expected": null },
+    { "name": "a JSON array is not a library", "first_bytes_hex": "5b7b7d5d", "expected": null },
+    { "name": "plain text", "first_bytes_hex": "68656c6c6f", "expected": null },
+    { "name": "empty file", "first_bytes_hex": "", "expected": null }
+  ],
+  "tool_description": [
+    { "name": "the usual pattern", "description": "LIB0201_1010 - NORTHLINE_NL-1550 (EM_D6.0_L25.34_R0.0_A)", "vendor": "", "brand": "NORTHLINE", "part_number": "NL-1550", "spec": "EM_D6.0_L25.34_R0.0_A" },
+    { "name": "only the first underscore splits brand from part", "description": "T5 - KESTREL_KT_200_X (DR_D3.0)", "vendor": "", "brand": "KESTREL", "part_number": "KT_200_X", "spec": "DR_D3.0" },
+    { "name": "a brand with a space, anchored by the vendor field", "description": "LIB0202_1001 - Blue Ridge 32257 (DR_D3.0_L20.0)", "vendor": "Blue Ridge", "brand": "Blue Ridge", "part_number": "32257", "spec": "DR_D3.0_L20.0" },
+    { "name": "vendor matching ignores case and keeps the description's spelling", "description": "T7 - blue ridge 32257 (DR)", "vendor": "Blue Ridge", "brand": "blue ridge", "part_number": "32257", "spec": "DR" },
+    { "name": "no tool ID prefix", "description": "NORTHLINE_NL-1550 (EM_D6.0)", "vendor": "", "brand": "NORTHLINE", "part_number": "NL-1550", "spec": "EM_D6.0" },
+    { "name": "no underscore: part number only", "description": "T9 - NL-1550 (EM_D6.0)", "vendor": "", "brand": "", "part_number": "NL-1550", "spec": "EM_D6.0" },
+    { "name": "Fusion's placeholder: no identity, never guessed", "description": "Milling Tool-5 Parameters", "vendor": "", "brand": "", "part_number": "", "spec": "Milling Tool-5 Parameters" },
+    { "name": "a bare size spec without parentheses", "description": "T3 - EM_D6.0_L25.34", "vendor": "", "brand": "", "part_number": "", "spec": "EM_D6.0_L25.34" },
+    { "name": "blank", "description": "", "vendor": "", "brand": "", "part_number": "", "spec": "" }
+  ],
+  "holder_description": [
+    { "name": "brand and part", "description": "APEX_AH-ER16-100", "brand": "APEX", "part_number": "AH-ER16-100" },
+    { "name": "only the first underscore splits", "description": "GRIPWELL_GW_SHR_4", "brand": "GRIPWELL", "part_number": "GW_SHR_4" },
+    { "name": "no underscore: part number only", "description": "AH-ER16-100", "brand": "", "part_number": "AH-ER16-100" },
+    { "name": "blank", "description": "", "brand": "", "part_number": "" }
+  ],
+  "shank": [
+    { "name": "6 mm stored in inches", "stored": 0.23622047244094202, "flagged_metric": false, "expected": "6MM" },
+    { "name": "half-millimetre sizes are metric", "stored": 0.0984251968503925, "flagged_metric": false, "expected": "2.5MM" },
+    { "name": "10 mm", "stored": 0.393700787401575, "flagged_metric": false, "expected": "10MM" },
+    { "name": "1/4 inch is 6.35 mm, off the metric grid", "stored": 0.25, "flagged_metric": false, "expected": 0.25 },
+    { "name": "1.25 inch is on a quarter-millimetre step only", "stored": 1.25, "flagged_metric": false, "expected": 1.25 },
+    { "name": "2.5 inch is 63.5 mm, but it's a 1/64 inch step: inches win", "stored": 2.5, "flagged_metric": false, "expected": 2.5 },
+    { "name": "5 inch is 127 mm, same rule", "stored": 5.0, "flagged_metric": false, "expected": 5.0 },
+    { "name": "inch values round to 4 places", "stored": 0.16799163818359375, "flagged_metric": false, "expected": 0.168 },
+    { "name": "flagged metric: the value is already millimetres", "stored": 6.0, "flagged_metric": true, "expected": "6MM" },
+    { "name": "flagged metric keeps decimals", "stored": 3.05, "flagged_metric": true, "expected": "3.05MM" },
+    { "name": "missing", "stored": null, "flagged_metric": false, "expected": null },
+    { "name": "zero", "stored": 0.0, "flagged_metric": false, "expected": null },
+    { "name": "negative", "stored": -1.0, "flagged_metric": false, "expected": null },
+    { "name": "absurdly large", "stored": 1e9, "flagged_metric": false, "expected": null }
+  ],
+  "row_issues": [
+    { "name": "a complete row", "row": { "brand": "NORTHLINE", "part_number": "NL-1550", "holder_brand": "APEX", "holder_part_number": "AH-1" }, "expected": [] },
+    { "name": "no brand", "row": { "part_number": "NL-1550", "holder_brand": "APEX", "holder_part_number": "AH-1" }, "expected": ["no-brand"] },
+    { "name": "whitespace counts as blank", "row": { "brand": "  ", "part_number": "NL-1550", "holder_brand": "APEX", "holder_part_number": "AH-1" }, "expected": ["no-brand"] },
+    { "name": "no part number", "row": { "brand": "NORTHLINE", "holder_brand": "APEX", "holder_part_number": "AH-1" }, "expected": ["no-part-number"] },
+    { "name": "holder part missing", "row": { "brand": "NORTHLINE", "part_number": "NL-1550", "holder_brand": "APEX" }, "expected": ["no-holder"] },
+    { "name": "no holder at all is one issue, not two", "row": { "brand": "NORTHLINE", "part_number": "NL-1550" }, "expected": ["no-holder"] },
+    { "name": "a CAM system as the tool brand", "row": { "brand": "Mastercam", "part_number": "NL-1550", "holder_brand": "APEX", "holder_part_number": "AH-1" }, "expected": ["cam-brand"] },
+    { "name": "CAM names match after folding case and punctuation", "row": { "brand": "FUSION-360", "part_number": "NL-1550", "holder_brand": "APEX", "holder_part_number": "AH-1" }, "expected": ["cam-brand"] },
+    { "name": "a CAM system as the holder brand, with no holder part", "row": { "brand": "NORTHLINE", "part_number": "NL-1550", "holder_brand": "Autodesk" }, "expected": ["no-holder", "cam-brand"] },
+    { "name": "whole names only: a brand containing a CAM name is fine", "row": { "brand": "Fusionware", "part_number": "NL-1550", "holder_brand": "APEX", "holder_part_number": "AH-1" }, "expected": [] },
+    { "name": "everything missing, in order", "row": {}, "expected": ["no-brand", "no-part-number", "no-holder"] }
+  ],
+  "combine": [
+    {
+      "name": "no rows",
+      "rows": [],
+      "expected": { "tools": [], "holders": [], "collets": [] }
+    },
+    {
+      "name": "one row",
+      "rows": [
+        { "brand": "NORTHLINE", "part_number": "NL-1550", "shank": "6MM", "tool_number": 1, "holder_brand": "APEX", "holder_part_number": "AH-1", "collet": "ER16-6" }
+      ],
+      "expected": {
+        "tools": [{ "brand": "NORTHLINE", "part_number": "NL-1550", "description": "", "hyperlink": "", "shank": "6MM", "quantity": 1, "tool_numbers": [1] }],
+        "holders": [{ "brand": "APEX", "part_number": "AH-1", "description": "", "hyperlink": "", "spindle_taper": "", "quantity": 1, "tool_numbers": [1] }],
+        "collets": [{ "collet": "ER16-6", "holder": "APEX AH-1", "shank": "6MM", "quantity": 1, "tool_numbers": [1] }]
+      }
+    },
+    {
+      "name": "the example in docs/COMBINE.md, with row 2 in lower case",
+      "rows": [
+        { "brand": "NORTHLINE", "part_number": "NL-1550", "description": "6MM END MILL", "shank": "6MM", "tool_number": 1, "holder_brand": "APEX", "holder_part_number": "AH-ER16-100", "quantity": 3, "collet": "ER16-6" },
+        { "brand": "northline", "part_number": "nl-1550", "description": "6MM END MILL", "shank": "6MM", "tool_number": 2, "holder_brand": "APEX", "holder_part_number": "AH-ER16-100", "collet": "ER16-6" },
+        { "description": "Milling Tool-5 Parameters", "shank": "4MM", "tool_number": 3, "holder_brand": "APEX", "holder_part_number": "AH-ER16-100", "collet": "ER16-4" },
+        { "description": "Milling Tool-5 Parameters", "tool_number": 4 }
+      ],
+      "expected": {
+        "tools": [
+          { "brand": "NORTHLINE", "part_number": "NL-1550", "description": "6MM END MILL", "hyperlink": "", "shank": "6MM", "quantity": 4, "tool_numbers": [1, 2] },
+          { "brand": "", "part_number": "", "description": "Milling Tool-5 Parameters", "hyperlink": "", "shank": "4MM", "quantity": 1, "tool_numbers": [3] },
+          { "brand": "", "part_number": "", "description": "Milling Tool-5 Parameters", "hyperlink": "", "shank": null, "quantity": 1, "tool_numbers": [4] }
+        ],
+        "holders": [
+          { "brand": "APEX", "part_number": "AH-ER16-100", "description": "", "hyperlink": "", "spindle_taper": "", "quantity": 3, "tool_numbers": [1, 2, 3] }
+        ],
+        "collets": [
+          { "collet": "ER16-6", "holder": "APEX AH-ER16-100", "shank": "6MM", "quantity": 2, "tool_numbers": [1, 2] },
+          { "collet": "ER16-4", "holder": "APEX AH-ER16-100", "shank": "4MM", "quantity": 1, "tool_numbers": [3] }
+        ]
+      }
+    },
+    {
+      "name": "the first non-blank link and taper win; a tool number used twice is listed once",
+      "rows": [
+        { "brand": "APEX", "part_number": "T-1", "tool_number": 5, "holder_brand": "GRIPWELL", "holder_part_number": "GW-1" },
+        { "brand": "APEX", "part_number": "T-1", "tool_number": 5, "hyperlink": "https://example.com/t-1", "holder_brand": "GRIPWELL", "holder_part_number": "GW-1", "spindle_taper": "CAT40", "quantity": 0 }
+      ],
+      "expected": {
+        "tools": [{ "brand": "APEX", "part_number": "T-1", "description": "", "hyperlink": "https://example.com/t-1", "shank": null, "quantity": 1, "tool_numbers": [5] }],
+        "holders": [{ "brand": "GRIPWELL", "part_number": "GW-1", "description": "", "hyperlink": "", "spindle_taper": "CAT40", "quantity": 2, "tool_numbers": [5] }],
+        "collets": []
+      }
+    }
+  ],
+  "csv_cell": [
+    { "name": "plain text", "value": "NL-1550", "expected": "NL-1550" },
+    { "name": "a formula", "value": "=HYPERLINK(\"http://x\")", "expected": "'=HYPERLINK(\"http://x\")" },
+    { "name": "leading plus", "value": "+1", "expected": "'+1" },
+    { "name": "leading at-sign", "value": "@SUM(A1)", "expected": "'@SUM(A1)" },
+    { "name": "leading tab", "value": "\tx", "expected": "'\tx" },
+    { "name": "a dash that isn't a number", "value": "-A1", "expected": "'-A1" },
+    { "name": "a negative number is safe", "value": "-12.5", "expected": "-12.5" },
+    { "name": "null is empty", "value": null, "expected": "" },
+    { "name": "tool numbers are joined", "value": [1, 4, 12], "expected": "1, 4, 12" }
+  ],
+  "brand_suggestions": [
+    { "name": "no brands", "brands": [], "expected": [] },
+    { "name": "one brand", "brands": ["NORTHLINE"], "expected": [] },
+    { "name": "capitalization only", "brands": ["NORTHLINE", "Northline", "NORTHLINE"], "expected": [{ "spellings": ["NORTHLINE", "Northline"], "reason": "case" }] },
+    { "name": "two letters swapped", "brands": ["KESTREL", "KESTREL", "KESTERL"], "expected": [{ "spellings": ["KESTREL", "KESTERL"], "reason": "spelling" }] },
+    { "name": "a letter missing", "brands": ["GRIPWELL", "GRIPWELL", "GRIPWEL"], "expected": [{ "spellings": ["GRIPWELL", "GRIPWEL"], "reason": "spelling" }] },
+    { "name": "short names one letter apart are left alone", "brands": ["APEX", "APEC"], "expected": [] },
+    { "name": "two edits apart is a different brand", "brands": ["NORTHLINE", "NORTHLAND"], "expected": [] },
+    { "name": "near matches chain, each one edit from the next; ties sort all-caps first, then alphabetically", "brands": ["NORTHLINE", "NORTHLANE", "NORTHLAND", "Northland"], "expected": [{ "spellings": ["NORTHLAND", "NORTHLANE", "NORTHLINE", "Northland"], "reason": "spelling" }] },
+    { "name": "blank brands are ignored", "brands": ["", "  ", "ORBIT"], "expected": [] }
+  ]
+}

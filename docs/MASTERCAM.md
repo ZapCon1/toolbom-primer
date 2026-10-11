@@ -78,6 +78,10 @@ Metric shanks come out as text (`"6MM"`) and inch shanks as numbers (`0.25`). Th
 
 Reference: [`src/toolbom_reader/mastercam.py`](../src/toolbom_reader/mastercam.py) and [`rows.py`](../src/toolbom_reader/rows.py) (`format_shank`).
 
+## Turning tools
+
+**Not supported yet.** Lathe tools live in their own tables (`TlToolLathe`, `TlToolLatheISO`, `TlTurnHolder`, `TlInsertTurningBoring` and others), not in `TlToolMill`. Going by the query above, a turning assembly listed in `TlAssembly` would come out with its T number and brand, but its part number would fall back to `CatalogID` (usually empty) and its shank would be blank. That hasn't been checked against a real lathe library. A turning tool is also an insert plus a holder, which doesn't fit the one-tool-one-holder row. If you need turning, that's the place to start, and a contribution is welcome ([CONTRIBUTING.md](../CONTRIBUTING.md)).
+
 ## Before you trust the file
 
 A `.tooldb` is a database, and a database can carry code. Before running the query:

@@ -12,7 +12,7 @@ Each line also lists the T numbers where it's used (`tool_numbers`, ascending, n
 
 ## The rules, and why
 
-- **Match ignoring case and surrounding spaces.** `Northline` and `NORTHLINE ` are the same brand. Brand *spelling* mistakes (`NORTHLNIE`) are not caught here: clean brands before combining if your data has them.
+- **Match ignoring case and surrounding spaces.** `Northline` and `NORTHLINE ` are the same brand. Brand *spelling* mistakes (`NORTHLNIE`) are not caught here: clean brands before combining if your data has them (see [BRANDS.md](BRANDS.md)).
 - **A blank quantity counts as 1.** One tool in the library is one physical tool unless someone says otherwise.
 - **Holders and collets count assemblies, not tool quantities.** A holder holds one tool at a time. Buying 4 of an end mill as spares doesn't mean buying 4 holders.
 - **Collets are their own list,** keyed by collet part number alone. The same holder takes different collets for different shanks, and the same collet fits several holders.

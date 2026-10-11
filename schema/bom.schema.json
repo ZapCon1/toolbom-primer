@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/ZapCon1/toolbom-primer/schema/bom.schema.json",
+  "$id": "https://zapcon1.github.io/toolbom-primer/schema/bom.schema.json",
   "title": "Tool library BOM",
   "description": "One row per tool assembly (a cutting tool in its holder), as read from a Mastercam or Fusion tool library.",
   "type": "object",

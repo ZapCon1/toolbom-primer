@@ -7,6 +7,11 @@
 - CSV output: `--csv` for rows, `--combine --csv` for purchase lists, with formula-like text quoted. `-o FILE` writes to a file (CSV with a byte-order mark for Excel).
 - `examples/`: a synthetic Mastercam and Fusion library with their exact output, checked by the tests.
 - Standard output is always UTF-8, so non-ASCII descriptions print on a Windows console.
+- `conformance/cases.json`: every rule as input and expected output, for testing an implementation in any language.
+- `brand_suggestions()`: find one manufacturer spelled several ways (case, or one edit apart for names of 5+ letters).
+- `detect_format()`: the format check on a file's first bytes, on its own.
+- New docs: BRANDS, INTEGRATION, GLOSSARY, FAQ, VERSIONS, and turning tools (not supported yet) in MASTERCAM.
+- The docs are published at https://zapcon1.github.io/toolbom-primer/, and the schemas' `$id`s now resolve there.
 
 ## 0.1.0 (2026-10-11)
 

@@ -13,6 +13,8 @@ _ZIP_MAGIC = b"PK\x03\x04"  # Fusion .tools
 _UTF8_BOM = b"\xef\xbb\xbf"  # Windows editors prepend this to saved .json
 
 Source = Literal["mastercam", "fusion"]
+# Enough for every signature (the SQLite one is the longest).
+HEAD_BYTES = len(_SQLITE_MAGIC)
 
 
 @dataclass(frozen=True)
@@ -30,14 +32,20 @@ def read_library(path: str | Path) -> Library:
     if not path.is_file():
         raise LibraryError(f"Tool library not found: {path}")
     with path.open("rb") as file:
-        head = file.read(len(_SQLITE_MAGIC))
-    source: Source
-    if head.startswith(_SQLITE_MAGIC):
-        source, rows = "mastercam", mastercam.read_rows(path)
-    elif head.startswith(_ZIP_MAGIC) or head.removeprefix(_UTF8_BOM).lstrip().startswith(b"{"):
-        source, rows = "fusion", fusion.read_rows(path)
-    else:
+        head = file.read(HEAD_BYTES)
+    source = detect_format(head)
+    if source is None:
         raise LibraryError(
             f"Unrecognized tool library: {path} (expected a Mastercam .tooldb or Fusion .tools)"
         )
+    rows = mastercam.read_rows(path) if source == "mastercam" else fusion.read_rows(path)
     return Library(source, [clean_row(row) for row in rows])
+
+
+def detect_format(head: bytes) -> Source | None:
+    """Which reader a file needs, from its first HEAD_BYTES bytes; None if neither."""
+    if head.startswith(_SQLITE_MAGIC):
+        return "mastercam"
+    if head.startswith(_ZIP_MAGIC) or head.removeprefix(_UTF8_BOM).lstrip().startswith(b"{"):
+        return "fusion"
+    return None

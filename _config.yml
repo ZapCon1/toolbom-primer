@@ -1,0 +1,14 @@
+# GitHub Pages: the docs as a site at https://zapcon1.github.io/toolbom-primer/
+title: ToolBOM Primer
+description: How to turn Mastercam and Fusion tool libraries into a bill of materials.
+theme: jekyll-theme-primer
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: false
+# Only the docs and the files they link to; not the test suite.
+exclude:
+  - .github/
+  - pyproject.toml
+  - examples/build_examples.py

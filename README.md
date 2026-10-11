@@ -9,6 +9,10 @@ Every shop that programs in Mastercam or Fusion already has its tooling written 
 - **[docs/BOM.md](docs/BOM.md)**: the 14-column BOM row, which fields the library supplies and which it can't, and the JSON schema.
 - **[docs/COMBINE.md](docs/COMBINE.md)**: turning one-row-per-tool into tool, holder and collet purchase lists without merging things that aren't the same part.
 - **[docs/SAFETY.md](docs/SAFETY.md)**: reading library files someone else sent you (or uploaded to your server) without getting hurt.
+- **[docs/BRANDS.md](docs/BRANDS.md)**: finding one manufacturer spelled three ways, so combining and joins don't split it.
+- **[docs/INTEGRATION.md](docs/INTEGRATION.md)**: three ways to build it in: a script over a folder, an upload endpoint, and a join to your item master.
+- **[docs/GLOSSARY.md](docs/GLOSSARY.md)**: holder, collet, shank, stickout, T number, for developers who haven't worked in a shop. **[docs/FAQ.md](docs/FAQ.md)**: "why is my part number blank?" and the rest. **[docs/VERSIONS.md](docs/VERSIONS.md)**: what's been checked.
+- **[conformance/](conformance)**: every rule as input and expected output in plain JSON, so you can test an implementation in any language.
 - **[`toolbom_reader`](src/toolbom_reader)**: a reference implementation in Python. It has no dependencies, is fully typed and tested, and is MIT licensed.
 - **[schema/](schema)**: JSON Schemas for the output, so a system in any language can consume it.
 
@@ -81,13 +85,13 @@ You don't have to use the Python package. The docs are written so you can implem
 6. **A CAM system's name in a brand field is a placeholder.** Libraries fill in `Mastercam` or `Fusion` when nobody entered the real maker. Flag those rows for a person; don't order from them.
 7. **Treat every library file as untrusted input.** A crafted `.tooldb` can run computations from its schema, and a crafted `.tools` can expand to gigabytes. See [docs/SAFETY.md](docs/SAFETY.md).
 
-If you're building with an AI coding assistant, point it at [AGENTS.md](AGENTS.md) first. It summarizes the rules above as constraints the assistant should follow.
+Writing your own in another language? Run it against [the conformance cases](conformance/README.md). If you're building with an AI coding assistant, point it at [AGENTS.md](AGENTS.md) first. It summarizes the rules above as constraints the assistant should follow.
 
 ## What's in scope
 
 | Covered | Not covered (bring your own) |
 |---|---|
-| Mastercam `.tooldb` libraries (SQLite) | Mastercam libraries in older, pre-`.tooldb` formats |
+| Mastercam `.tooldb` milling tools (SQLite) | Mastercam turning tools ([why](docs/MASTERCAM.md#turning-tools)); libraries in older, pre-`.tooldb` formats |
 | Fusion `.tools` and Fusion JSON exports | Other CAM systems (contributions welcome) |
 | Tool, holder and shank identity; T numbers | Hyperlinks, quantity, collet, spindle taper, stickout (no library format stores them reliably) |
 | Combining duplicates into purchase lists | Spreadsheet formatting, pricing, ordering |

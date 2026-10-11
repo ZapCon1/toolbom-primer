@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/ZapCon1/toolbom-primer/schema/purchase-lists.schema.json",
+  "$id": "https://zapcon1.github.io/toolbom-primer/schema/purchase-lists.schema.json",
   "title": "Tool library purchase lists",
   "description": "BOM rows combined into tool, holder and collet purchase lists (see docs/COMBINE.md).",
   "type": "object",
