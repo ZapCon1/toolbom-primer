@@ -1,0 +1,5 @@
+* text=auto eol=lf
+# Example output is compared byte for byte by tests/test_examples.py.
+examples/*.csv -text
+examples/*.tooldb binary
+examples/*.tools binary

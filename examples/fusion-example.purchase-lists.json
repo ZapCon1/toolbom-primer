@@ -1,0 +1,75 @@
+{
+  "source": "fusion",
+  "tools": [
+    {
+      "brand": "NORTHLINE",
+      "part_number": "NL-1550",
+      "description": "FLAT END MILL - EM_D6.0_L25.34_R0.0_A",
+      "hyperlink": "",
+      "shank": "6MM",
+      "quantity": 1,
+      "tool_numbers": [
+        1
+      ]
+    },
+    {
+      "brand": "Blue Ridge",
+      "part_number": "32257",
+      "description": "DRILL - DR_D3.0_L20.0",
+      "hyperlink": "",
+      "shank": "3MM",
+      "quantity": 1,
+      "tool_numbers": [
+        2
+      ]
+    },
+    {
+      "brand": "MICROLINE",
+      "part_number": "ML-0400",
+      "description": "BALL END MILL - BEM_D1.0_L3.0",
+      "hyperlink": "https://example.com/microline/ml-0400",
+      "shank": "4MM",
+      "quantity": 1,
+      "tool_numbers": [
+        3
+      ]
+    },
+    {
+      "brand": "",
+      "part_number": "",
+      "description": "Milling Tool-5 Parameters",
+      "hyperlink": "",
+      "shank": 0.5,
+      "quantity": 1,
+      "tool_numbers": [
+        4
+      ]
+    }
+  ],
+  "holders": [
+    {
+      "brand": "APEX",
+      "part_number": "AH-ER16-100",
+      "description": "",
+      "hyperlink": "",
+      "spindle_taper": "",
+      "quantity": 2,
+      "tool_numbers": [
+        1,
+        2
+      ]
+    },
+    {
+      "brand": "GRIPWELL",
+      "part_number": "GW-SHR-4",
+      "description": "",
+      "hyperlink": "https://example.com/gripwell/gw-shr-4",
+      "spindle_taper": "",
+      "quantity": 1,
+      "tool_numbers": [
+        3
+      ]
+    }
+  ],
+  "collets": []
+}

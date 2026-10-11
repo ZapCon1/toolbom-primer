@@ -17,13 +17,17 @@ Every shop that programs in Mastercam or Fusion already has its tooling written 
 ## Quick start
 
 ```bash
-pip install git+https://github.com/ZapCon1/toolbom-primer
-toolbom-reader MyLibrary.tooldb              # one row per tool, as JSON
-toolbom-reader MyLibrary.tools --combine     # tool / holder / collet purchase lists
+pip install git+https://github.com/ZapCon1/toolbom-primer@v0.2.0
+toolbom-reader examples/mastercam-example.tooldb         # one row per tool, as JSON
+toolbom-reader examples/fusion-example.tools --combine   # tool / holder / collet purchase lists
+toolbom-reader MyLibrary.tooldb --csv -o bom.csv         # CSV, ready for Excel or an ERP import
+toolbom-reader MyLibrary.tools --check                   # rows a person must fix before ordering
 ```
 
+No library of your own yet? [`examples/`](examples) has a small synthetic Mastercam and Fusion library, each with the exact JSON, CSV and `--check` output the reader produces from it. If you're writing your own reader, those outputs are your test expectations.
+
 ```python
-from toolbom_reader import read_library, combine
+from toolbom_reader import combine, read_library, row_issues
 
 library = read_library("MyLibrary.tooldb")  # format detected from content, not extension
 print(library.source)  # "mastercam" or "fusion"
@@ -33,6 +37,10 @@ for row in library.rows:
 lists = combine(library.rows)
 for line in lists.holders:
     print(line.quantity, line.brand, line.part_number, "used at T", line.tool_numbers)
+
+for row in library.rows:
+    for issue in row_issues(row):  # blank brand/part/holder, or "Mastercam" as a brand
+        print(row.tool_number, issue.message)
 ```
 
 Output of `toolbom-reader` (abridged):
@@ -67,10 +75,11 @@ You don't have to use the Python package. The docs are written so you can implem
 
 1. **Detect the format from the file's first bytes, not its extension.** `SQLite format 3\0` is Mastercam. `PK\3\4` is a Fusion `.tools` zip. `{` (after an optional UTF-8 byte-order mark) is a Fusion JSON export.
 2. **Mastercam's part number is `TlToolMill.MfgToolCode`** (the "Manufacturer's Code" field in the UI), not `CatalogID`, which is usually empty.
-3. **Mastercam's metric flag is unreliable.** Shanks are stored in inches even for metric tools. A value that lands on a 0.5 mm step is metric: 0.23622 in is 6 mm.
+3. **Mastercam's metric flag is unreliable.** Shanks are stored in inches even for metric tools. A value that lands on a 0.5 mm step is metric (0.23622 in is 6 mm), unless it's also a 1/64" size such as 2.5".
 4. **Fusion's part-number fields are usually empty.** Brand and part number live in the description, as `<tool ID> - <BRAND>_<PART> (<size spec>)`. If it doesn't match, leave them blank. Never guess.
 5. **Never merge rows that have no part number.** Fusion's "Milling Tool-5 Parameters" placeholders are different tools that share a description.
-6. **Treat every library file as untrusted input.** A crafted `.tooldb` can run computations from its schema, and a crafted `.tools` can expand to gigabytes. See [docs/SAFETY.md](docs/SAFETY.md).
+6. **A CAM system's name in a brand field is a placeholder.** Libraries fill in `Mastercam` or `Fusion` when nobody entered the real maker. Flag those rows for a person; don't order from them.
+7. **Treat every library file as untrusted input.** A crafted `.tooldb` can run computations from its schema, and a crafted `.tools` can expand to gigabytes. See [docs/SAFETY.md](docs/SAFETY.md).
 
 If you're building with an AI coding assistant, point it at [AGENTS.md](AGENTS.md) first. It summarizes the rules above as constraints the assistant should follow.
 
@@ -82,6 +91,7 @@ If you're building with an AI coding assistant, point it at [AGENTS.md](AGENTS.m
 | Fusion `.tools` and Fusion JSON exports | Other CAM systems (contributions welcome) |
 | Tool, holder and shank identity; T numbers | Hyperlinks, quantity, collet, spindle taper, stickout (no library format stores them reliably) |
 | Combining duplicates into purchase lists | Spreadsheet formatting, pricing, ordering |
+| JSON and CSV output; flagging rows a person must fix | |
 
 ## Development
 
@@ -92,7 +102,9 @@ pytest                                # tests use synthetic libraries built in t
 mypy && ruff check . && ruff format --check .
 ```
 
-The tests never need a real tool library. `tests/tooldb_factory.py` and `tests/fusion_factory.py` build minimal synthetic ones. Please don't commit real libraries: they can hold a shop's proprietary tooling data.
+The tests never need a real tool library. `tests/tooldb_factory.py` and `tests/fusion_factory.py` build minimal synthetic ones. Please don't commit real libraries: they can hold a shop's proprietary tooling data. See [CONTRIBUTING.md](CONTRIBUTING.md), and [SECURITY.md](SECURITY.md) to report a way past one of the defenses.
+
+After a deliberate change to the reader's output, rebuild the examples with `python examples/build_examples.py` and review the diff.
 
 ## License
 

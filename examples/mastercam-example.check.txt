@@ -1,0 +1,3 @@
+T12  Mastercam: Mastercam is a CAM system, not a tool brand; No part number
+T20  TAPWORKS TW-M8-125: Holder brand or part number missing
+2 of 6 rows need a person's attention.

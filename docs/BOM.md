@@ -36,7 +36,16 @@ A row can't be ordered from as it stands when any of these is true:
 - the holder brand or holder part number is blank;
 - **the brand is a CAM system, not a manufacturer.** Libraries fill the brand field with `Mastercam`, `Fusion` or `Autodesk` when nobody entered the real maker. Treat those as blank.
 
-Flag these rows; don't drop them. The tool is still in the program.
+Flag these rows; don't drop them. The tool is still in the program. Match CAM names after lower-casing and dropping everything but letters and digits, so `Fusion 360` and `FUSION-360` are caught alike, and match whole names only: `Fusionware` could be a real brand, not a placeholder.
+
+Reference: [`src/toolbom_reader/issues.py`](../src/toolbom_reader/issues.py) (`row_issues`, `is_cam_brand`), or `toolbom-reader LIBRARY --check`.
+
+## CSV
+
+`toolbom-reader LIBRARY --csv` writes the rows in the column order above, with the JSON keys as headers. `--combine --csv` writes the three purchase lists as titled blocks in one file. Two things matter if you write your own:
+
+- **Quote anything a spreadsheet would run as a formula.** A cell starting with `=`, `+`, `@`, a tab, or a `-` that isn't a plain number is prefixed with `'`. Library text is untrusted, and a description of `=HYPERLINK(...)` would otherwise run when someone opens the file.
+- **Start the file with a UTF-8 byte-order mark** if people will open it in Excel. Without it, Excel reads the file as ANSI and mangles `Ø` in a description. (`-o FILE` does this; standard output doesn't.)
 
 ## Limits
 

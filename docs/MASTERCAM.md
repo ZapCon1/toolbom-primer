@@ -61,7 +61,7 @@ Every text column can hold NULL or a non-string. Treat anything that isn't a str
 
 `ArborDiameter` is stored **in inches, even for metric tools**, and the item's `IsMetric` flag is usually off for those tools. A 6 mm shank comes back as `0.23622047244094202`.
 
-The fix is to look at the value itself. Convert to millimetres. If the result lands within 0.001 mm of a half-millimetre step, the tool is metric:
+The fix is to look at the value itself. First, a value on a 1/64" step is an inch size. Otherwise convert to millimetres: if the result lands within 0.001 mm of a half-millimetre step, the tool is metric:
 
 | Stored | × 25.4 | On a 0.5 mm step? | BOM shows |
 |---|---|---|---|
@@ -70,8 +70,9 @@ The fix is to look at the value itself. Convert to millimetres. If the result la
 | 0.25 | 6.35 | no | `0.25` |
 | 0.125 | 3.175 | no | `0.125` |
 | 1.25 | 31.75 | no (a quarter step) | `1.25` |
+| 2.5 | 63.5 | yes, but 2.5" is a 1/64" step | `2.5` |
 
-No common inch shank lands on that grid, so the rule doesn't misfire in practice. When `IsMetric` *is* set, treat the value as millimetres already. Blank out values that are zero, negative, non-finite or absurdly large; they come from corrupt data.
+The inch check has to come first: multiples of 2.5" (63.5 mm, 127 mm) sit on the metric grid, and a 2.5" face-mill arbor is real. No metric size lands on a 1/64" step except those multiples, so the two checks never disagree on a real tool. When `IsMetric` *is* set, treat the value as millimetres already. Blank out values that are zero, negative, non-finite or absurdly large; they come from corrupt data.
 
 Metric shanks come out as text (`"6MM"`) and inch shanks as numbers (`0.25`). That's deliberate: a purchasing team reads `6MM` correctly, and an inch number stays sortable.
 

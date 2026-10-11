@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "toolbom-reader"
-version = "0.1.0"
+version = "0.2.0"
 description = "Read Mastercam (.tooldb) and Fusion (.tools) tool libraries as bill-of-materials rows."
 readme = "README.md"
 license = "MIT"
@@ -48,7 +48,8 @@ source = ["toolbom_reader"]
 
 [tool.mypy]
 strict = true
-files = ["src", "tests"]
+files = ["src", "tests", "examples"]
+mypy_path = ["tests"]
 
 [[tool.mypy.overrides]]
 module = ["jsonschema"]

@@ -25,6 +25,10 @@ _MAX_SHANK_TEXT = 40
 # 1/8" = 3.175 mm, 1/2" = 12.7 mm.
 _METRIC_GRID_MM = 0.5
 _METRIC_TOLERANCE_MM = 0.001
+# Multiples of 2.5" land on that grid too (2.5" = 63.5 mm), so a value on a
+# 1/64" step is taken as inches first. No metric size lands on both grids.
+_INCH_FRACTION = 1 / 64
+_INCH_TOLERANCE = 1e-6
 # Far above any real shank in inches or millimetres; bigger values are corrupt.
 _MAX_SHANK = 10_000.0
 
@@ -91,6 +95,9 @@ def format_shank(stored: float | None, flagged_metric: bool) -> Shank | None:
         return None
     if flagged_metric:
         return _millimetres(stored)
+    fraction = round(stored / _INCH_FRACTION) * _INCH_FRACTION
+    if abs(stored - fraction) < _INCH_TOLERANCE:
+        return round(stored, 4)
     mm = stored * MM_PER_INCH
     on_grid = round(mm / _METRIC_GRID_MM) * _METRIC_GRID_MM
     if abs(mm - on_grid) < _METRIC_TOLERANCE_MM:

@@ -107,3 +107,50 @@ def test_cli_reports_a_bad_file_and_exits_nonzero(
 ) -> None:
     assert main([str(tmp_path / "nope.tools")]) == 1
     assert "not found" in capsys.readouterr().err
+
+
+def test_cli_csv_prints_rows_in_bom_column_order(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    path = build_fusion_library(tmp_path / "lib.tools", [fusion_tool()])
+    assert main([str(path), "--csv"]) == 0
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[0].startswith("brand,part_number,description,hyperlink,quantity,shank")
+    assert lines[1].startswith("NORTHLINE,NL-1550,")
+
+
+def test_cli_csv_to_a_file_starts_with_a_byte_order_mark_for_excel(tmp_path: Path) -> None:
+    path = build_fusion_library(tmp_path / "lib.tools", [fusion_tool(number=1)])
+    out = tmp_path / "bom.csv"
+    assert main([str(path), "--csv", "--combine", "-o", str(out)]) == 0
+    data = out.read_bytes()
+    assert data.startswith(b"\xef\xbb\xbftools\r\n")
+
+
+def test_cli_json_to_a_file_round_trips(tmp_path: Path) -> None:
+    path = build_fusion_library(tmp_path / "lib.tools", [fusion_tool()])
+    out = tmp_path / "bom.json"
+    assert main([str(path), "-o", str(out)]) == 0
+    assert json.loads(out.read_text(encoding="utf-8")) == read_library(path).to_dict()
+
+
+def test_cli_check_lists_rows_that_need_a_person(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    tools = [
+        fusion_tool(number=1),
+        fusion_tool(number=2, description="T2 - Mastercam_NL-2 (EM)", vendor=""),
+        fusion_tool(number=3, description="Milling Tool-5 Parameters"),
+    ]
+    path = build_fusion_library(tmp_path / "lib.tools", tools)
+    assert main([str(path), "--check"]) == 0
+    assert capsys.readouterr().out.splitlines() == [
+        "T2  Mastercam NL-2: Mastercam is a CAM system, not a tool brand",
+        "T3  Milling Tool-5 Parameters: No brand; No part number",
+        "2 of 3 rows need a person's attention.",
+    ]
+
+
+def test_cli_check_refuses_csv_or_combine(tmp_path: Path) -> None:
+    with pytest.raises(SystemExit):
+        main([str(tmp_path / "lib.tools"), "--check", "--csv"])

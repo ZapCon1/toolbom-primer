@@ -1,0 +1,99 @@
+{
+  "source": "mastercam",
+  "tools": [
+    {
+      "brand": "NORTHLINE",
+      "part_number": "NL-1550",
+      "description": "6MM 3FL SQUARE END MILL",
+      "hyperlink": "",
+      "shank": "6MM",
+      "quantity": 2,
+      "tool_numbers": [
+        1,
+        2
+      ]
+    },
+    {
+      "brand": "KESTREL",
+      "part_number": "KT-D250",
+      "description": "1/4\" JOBBER DRILL",
+      "hyperlink": "",
+      "shank": 0.25,
+      "quantity": 1,
+      "tool_numbers": [
+        3
+      ]
+    },
+    {
+      "brand": "ORBIT",
+      "part_number": "OR-FM400",
+      "description": "4\" FACE MILL",
+      "hyperlink": "",
+      "shank": 2.5,
+      "quantity": 1,
+      "tool_numbers": [
+        10
+      ]
+    },
+    {
+      "brand": "Mastercam",
+      "part_number": "",
+      "description": "1/2 CHAMFER MILL",
+      "hyperlink": "",
+      "shank": 0.5,
+      "quantity": 1,
+      "tool_numbers": [
+        12
+      ]
+    },
+    {
+      "brand": "TAPWORKS",
+      "part_number": "TW-M8-125",
+      "description": "M8x1.25 THREAD MILL",
+      "hyperlink": "",
+      "shank": "8MM",
+      "quantity": 1,
+      "tool_numbers": [
+        20
+      ]
+    }
+  ],
+  "holders": [
+    {
+      "brand": "GRIPWELL",
+      "part_number": "GW-HYD-12",
+      "description": "HYDRO CHUCK 12MM CAT40",
+      "hyperlink": "",
+      "spindle_taper": "",
+      "quantity": 2,
+      "tool_numbers": [
+        1,
+        2
+      ]
+    },
+    {
+      "brand": "APEX",
+      "part_number": "AH-ER16-100",
+      "description": "ER16 COLLET CHUCK CAT40",
+      "hyperlink": "",
+      "spindle_taper": "",
+      "quantity": 2,
+      "tool_numbers": [
+        3,
+        12
+      ]
+    },
+    {
+      "brand": "APEX",
+      "part_number": "AH-SM-250",
+      "description": "SHELL MILL ARBOR 2.5 CAT40",
+      "hyperlink": "",
+      "spindle_taper": "",
+      "quantity": 1,
+      "tool_numbers": [
+        10
+      ]
+    }
+  ],
+  "collets": []
+}

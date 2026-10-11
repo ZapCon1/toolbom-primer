@@ -1,0 +1,5 @@
+﻿brand,part_number,description,hyperlink,quantity,shank,tool_number,holder_brand,holder_part_number,holder_description,holder_hyperlink,collet,spindle_taper,stickout
+NORTHLINE,NL-1550,FLAT END MILL - EM_D6.0_L25.34_R0.0_A,,,6MM,1,APEX,AH-ER16-100,,,,,
+Blue Ridge,32257,DRILL - DR_D3.0_L20.0,,,3MM,2,APEX,AH-ER16-100,,,,,
+MICROLINE,ML-0400,BALL END MILL - BEM_D1.0_L3.0,https://example.com/microline/ml-0400,,4MM,3,GRIPWELL,GW-SHR-4,,https://example.com/gripwell/gw-shr-4,,,
+,,Milling Tool-5 Parameters,,,0.5,4,,,,,,,

@@ -40,7 +40,7 @@ Fusion exports a tool library in one of two forms:
 | `brand` | parsed from `description` | See below. `vendor` helps but doesn't decide. |
 | `part_number` | `product-id`, else parsed from `description` | `product-id` is almost always empty. |
 | `description` | the size spec from `description`, prefixed with the upper-cased `type` | `FLAT END MILL - EM_D6.0_L25.34_R0.0_A`. If the description didn't parse, keep it as written. |
-| `shank` | `geometry.SFDM` in the tool's `unit` | `unit` starting `millimet` means the value is millimetres. Otherwise apply the same half-millimetre check as [Mastercam](MASTERCAM.md#the-metric-shank-trap). |
+| `shank` | `geometry.SFDM` in the tool's `unit` | `unit` starting `millimet` means the value is millimetres. Otherwise apply the same inch-fraction and half-millimetre checks as [Mastercam](MASTERCAM.md#the-metric-shank-trap). |
 | `tool_number` | `post-process.number` | Must be an integer (watch out: JSON `true` is not 1). |
 | `holder_brand` | `holder.vendor`, else parsed from `holder.description` | |
 | `holder_part_number` | `holder.product-id`, else parsed from `holder.description` | |

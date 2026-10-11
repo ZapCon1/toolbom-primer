@@ -28,6 +28,9 @@ def test_metric_shank_stored_in_inches_comes_out_in_millimetres(
         (0.125, 0.125),  # 3.175 mm
         (1.25, 1.25),  # 31.75 mm: a quarter-mm step, not a half-mm one
         (0.16799163818359375, 0.168),  # float noise rounds to 4 places
+        (2.5, 2.5),  # 63.5 mm is on the metric grid, but 2.5" is an inch size
+        (5.0, 5.0),  # 127 mm
+        (0.015625, 0.0156),  # 1/64"
     ],
 )
 def test_inch_shank_stays_a_number(stored_inches: float, expected: float) -> None:

@@ -15,6 +15,9 @@ htmlcov/
 *.tooldb
 *.tools
 *.xlsx
+# ...except the synthetic examples.
+!examples/*-example.tooldb
+!examples/*-example.tools
 
 .env
 .env.*
