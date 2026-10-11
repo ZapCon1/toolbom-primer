@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ZapCon1/toolbom-primer/schema/bom.schema.json",
+  "title": "Tool library BOM",
+  "description": "One row per tool assembly (a cutting tool in its holder), as read from a Mastercam or Fusion tool library.",
+  "type": "object",
+  "required": ["source", "rows"],
+  "additionalProperties": false,
+  "properties": {
+    "source": {
+      "description": "Which CAM system the library came from.",
+      "enum": ["mastercam", "fusion"]
+    },
+    "rows": {
+      "type": "array",
+      "maxItems": 5000,
+      "items": { "$ref": "#/$defs/row" }
+    }
+  },
+  "$defs": {
+    "text": { "type": "string", "maxLength": 300 },
+    "link": { "type": "string", "maxLength": 2048 },
+    "shank": {
+      "description": "Inch shanks are numbers (0.5); metric shanks are text in millimetres (\"6MM\", \"2.5MM\"). Null when the library has no usable value.",
+      "oneOf": [
+        { "type": "number", "exclusiveMinimum": 0 },
+        { "type": "string", "pattern": "^[0-9.]+MM$" },
+        { "type": "null" }
+      ]
+    },
+    "row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "brand", "part_number", "description", "shank", "tool_number",
+        "holder_brand", "holder_part_number", "holder_description",
+        "hyperlink", "quantity", "holder_hyperlink", "collet", "spindle_taper", "stickout"
+      ],
+      "properties": {
+        "brand": { "$ref": "#/$defs/text", "description": "Tool manufacturer. From the library." },
+        "part_number": { "$ref": "#/$defs/text", "description": "Tool vendor part number. From the library; blank when it can't be found (never guessed)." },
+        "description": { "$ref": "#/$defs/text", "description": "Tool description. From the library." },
+        "shank": { "$ref": "#/$defs/shank" },
+        "tool_number": { "type": ["integer", "null"], "minimum": 0, "maximum": 1000000, "description": "T number. From the library." },
+        "holder_brand": { "$ref": "#/$defs/text", "description": "Holder manufacturer. From the library." },
+        "holder_part_number": { "$ref": "#/$defs/text", "description": "Holder part number. From the library." },
+        "holder_description": { "$ref": "#/$defs/text", "description": "Holder description. Mastercam only; blank for Fusion." },
+        "hyperlink": { "$ref": "#/$defs/link", "description": "Tool product page. Fusion's product-link when present; otherwise for you to fill in." },
+        "quantity": { "type": ["integer", "null"], "minimum": 0, "description": "How many to buy. Not in either library: for you to fill in. Blank counts as 1 when combining." },
+        "holder_hyperlink": { "$ref": "#/$defs/link", "description": "Holder product page. Fusion's holder product-link when present; otherwise for you to fill in." },
+        "collet": { "$ref": "#/$defs/text", "description": "Sleeve or collet part number. Not in either library: for you to fill in." },
+        "spindle_taper": { "$ref": "#/$defs/text", "description": "e.g. CAT40, HSK63A. Not in either library: for you to fill in." },
+        "stickout": { "type": ["number", "null"], "minimum": 0, "description": "Tool stickout. Not in either library: for you to fill in." }
+      }
+    }
+  }
+}
